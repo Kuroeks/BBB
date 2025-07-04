@@ -1,0 +1,14 @@
+{
+    "id": "Bib",
+    "name": "Bib's Bizarre Bazaar",
+    "author": ["Kuroeks"],
+    "description": "Funsies",
+    "badge_colour": "C00000",
+    "version": "1.0.0",
+    "dependencies": [
+        "Steamodded (>=1.0.0~ALPHA-1314a)"
+    ],
+    "prefix": "BBB",
+    "main_file": "main.lua",
+    "priority": 37
+}
