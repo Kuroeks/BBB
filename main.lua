@@ -91,7 +91,7 @@ SMODS.Rank {
     face_nominal = 0.05,
     face = true,
     shorthand = bbb_lang.english_names and 'Knv' or 'F',
-    next = { 'Knight' },
+    next = { 'BBB_Knight' },
     loc_txt = { name = bbb_lang.english_names and 'Knave' or 'Fante' },
     in_pool = allow_suits
 }
@@ -105,7 +105,7 @@ SMODS.Rank {
     face_nominal = 0.1,
     face = true,
     shorthand = bbb_lang.english_names and 'Knt' or 'C',
-    next = { 'King' },
+    next = { 'BBB_King' },
     loc_txt = { name = bbb_lang.english_names and 'Knight' or 'Cavallo' },
     in_pool = allow_suits
 }
@@ -119,7 +119,7 @@ SMODS.Rank {
     face_nominal = 0.15,
     face = true,
     shorthand = bbb_lang.english_names and 'Ki' or 'R',
-    next = { 'Ace' },
+    next = { 'BBB_Ace' },
     loc_txt = { name = bbb_lang.english_names and 'King' or 'Re' },
     in_pool = allow_suits
 }
