@@ -86,13 +86,13 @@ local swords_suit = SMODS.Suit {
 SMODS.Rank {
     key = 'Knave',
     card_key = 'F',
-    pos = { x = 6 },
+    pos = { x = 9 },
     nominal = 8,
     face_nominal = 0.05,
     face = true,
-    shorthand = bbb_lang.english_name and 'Knv' or 'F',
+    shorthand = bbb_lang.english_names and 'Knv' or 'F',
     next = { 'Knight' },
-    loc_txt = { name = bbb_lang.english_name and 'Knave' or 'Fante' },
+    loc_txt = { name = bbb_lang.english_names and 'Knave' or 'Fante' },
     in_pool = allow_suits
 }
 
@@ -100,13 +100,13 @@ SMODS.Rank {
 SMODS.Rank {
     key = 'Knight',
     card_key = 'C',
-    pos = { x = 7 },
+    pos = { x = 10 },
     nominal = 9,
     face_nominal = 0.1,
     face = true,
-    shorthand = bbb_lang.english_name and 'Knt' or 'C',
+    shorthand = bbb_lang.english_names and 'Knt' or 'C',
     next = { 'King' },
-    loc_txt = { name = bbb_lang.english_name and 'Knight' or 'Cavallo' },
+    loc_txt = { name = bbb_lang.english_names and 'Knight' or 'Cavallo' },
     in_pool = allow_suits
 }
 
@@ -114,13 +114,13 @@ SMODS.Rank {
 SMODS.Rank {
     key = 'King',
     card_key = 'R',
-    pos = { x = 8 },
+    pos = { x = 11 },
     nominal = 10,
     face_nominal = 0.15,
     face = true,
-    shorthand = bbb_lang.english_name and 'Ki' or 'R',
+    shorthand = bbb_lang.english_names and 'Ki' or 'R',
     next = { 'Ace' },
-    loc_txt = { name = bbb_lang.english_name and 'King' or 'Re' },
+    loc_txt = { name = bbb_lang.english_names and 'King' or 'Re' },
     in_pool = allow_suits
 }
 
@@ -128,42 +128,73 @@ SMODS.Rank {
 SMODS.Rank {
     key = 'Ace',
     card_key = 'Ac',
-    pos = { x = 9 },
+    pos = { x = 12 },
     nominal = 1,
     face_nominal = 0.2,
     face = false,
-    shorthand = bbb_lang.english_name and 'Ac' or 'As',
+    shorthand = bbb_lang.english_names and 'Ac' or 'As',
     straight_edge = true,
     next = { '2' },
-    loc_txt = { name = bbb_lang.english_name and 'Ace' or 'Asso' },
+    loc_txt = { name = bbb_lang.english_names and 'Ace' or 'Asso' },
     in_pool = allow_suits
 }
 
--- deck
+-- Deck
 
 SMODS.Back {
     key = "scopa",
     atlas = 'Decks',
     pos = { x = 0, y = 0 },
     apply = function(self)
-        G.E_MANAGER:add_event(Event({
-            func = function()
-                for k, v in pairs(G.playing_cards) do
-                    if v.base.suit == 'Spades' then
-                        v:change_suit("BBB_Swords")
-                    elseif v.base.suit == 'Hearts' then
-                        v:change_suit("BBB_Cups")
-                    elseif v.base.suit == 'Diamonds' then
-                        v:change_suit("BBB_Coins")
-                    elseif v.base.suit == 'Clubs' then
-                        v:change_suit("BBB_Staves")
-                    end
+
+-- Erase Faces
+	G.E_MANAGER:add_event(Event({
+	    func = function()
+	        for i = #G.playing_cards, 1, -1 do
+	            local id = G.playing_cards[i]:get_id()
+	            if id == 11 or id == 12 or id == 13 then
+	                G.playing_cards[i]:start_dissolve(nil, true)
+	            end
+	        end
+	        return true
+	    end
+}))
+
+-- Conversion
+    G.E_MANAGER:add_event(Event({
+    	delay = 0.5,
+        func = function()
+            for k, v in pairs(G.playing_cards) do
+                -- Suit
+                local s = v.base.suit
+                local target_suit = ({
+                    Spades = "BBB_Swords",
+                    Hearts = "BBB_Cups",
+                    Diamonds = "BBB_Coins",
+                    Clubs = "BBB_Staves"
+                })[s]
+                if target_suit then
+                    v:change_suit(target_suit)
                 end
-                G.GAME.starting_params.scopa_Deck = true
-                return true
+
+                -- Rank
+                local id = v:get_id()
+                if id == 8 then
+                    SMODS.change_base(v, nil, "BBB_Knave")
+                elseif id == 9 then
+                    SMODS.change_base(v, nil, "BBB_Knight")
+                elseif id == 10 then
+                    SMODS.change_base(v, nil, "BBB_King")
+                    elseif id == 14 then
+                    SMODS.change_base(v, nil, "BBB_Ace")
+                end 
             end
-        }))
-    end,
+
+            G.GAME.starting_params.scopa_Deck = true
+            return true
+        end
+    }))
+end,
 }
 
 bbb_mod.config_tab = function()
